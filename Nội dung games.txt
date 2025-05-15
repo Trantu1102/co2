@@ -1,0 +1,47 @@
+Mô tả games “Tính vết Carbon của Bạn”
+
+Dữ liệu gồm:
+Điện năng tiêu thụ
+Giao thông đi lại
+Ăn uống
+Mua sắm, tiêu dùng (quần áo, đồ điện tử, giải trí…)
+Mô tả chi tiết:
+Điện năng tiêu thụ:
+Trung bình tại Việt Nam, một hộ tiêu thụ ~300 kWh/tháng. Nếu chia cho 3 người → 100 kWh/người/tháng.
+Hệ số phát thải điện lưới Việt Nam năm 2023: ~0,6592 kg CO₂e/kWh
+-> Tổng phát thải điện = 100 × 0,6592 = 65,92 kg CO₂e
+Vậy ở form đầu tiên, có thể cho bạn đọc chọn điện năng tiêu thụ, sau đó nhập vào số KWh đã sử dụng trong tháng của họ.
+Sử dụng công thức tính toán: Tổng phát thải điện = Số Kwh/3*0,6592 = …. kg CO₂e
+Giao thông, đi lại: Chọn ô tô hoặc xe máy (Nhiên liệu xăng hoặc điện)
+Xe máy xăng: 2,5l /100km → Bạn đọc nhập số km trung bình đi trong ngày  → số km trung bình đi trong tháng, sử dụng công thức: 
+Sử dụng công thức tính toán: Tổng phát thải giao thông = (Số Km (trong ngày) /100*2,5)*30 * 2,31 (Hệ số phát thải xăng) = … kg CO₂e
+Xe máy điện: 0,0345 kWh/km 
+Sử dụng công thức tính toán: Tổng phát thải giao thông = (Số Km (trong ngày)*30 * 0,0345 * 0,6592 (Hệ số phá thải lưới điện Việt Nam) = … kg CO₂e
+Ô tô xăng: 8/100km → Bạn đọc nhập số km trung bình đi trong ngày  → số km trung bình đi trong tháng, sử dụng công thức: 
+Sử dụng công thức tính toán: Tổng phát thải giao thông = (Số Km (trong ngày) /100*8)*30 * 2,31 (Hệ số phá thải xăng) = … kg CO₂e
+Ô tô điện: 0,15 - 0,2 kWh/km
+Sử dụng công thức tính toán: Tổng phát thải giao thông = (Số Km (trong ngày)*30 * 0,2 * 0,6592 (Hệ số phá thải lưới điện Việt Nam) = … kg CO₂e
+
+Ăn uống: Ta sử dụng 2 phương án đơn giản là ăn nhiều thịt đỏ và ăn cân bằng hoặc ăn chay
+Người ăn nhiều thịt đỏ: có thể phát thải 200–300 kg CO₂e/tháng
+Người ăn theo kiểu cân bằng hoặc chay: chỉ ~100–150 kg CO₂e/tháng
+Tạm tính trung bình: 200 kg CO₂e/tháng
+Sử dụng công thức: Chọn ăn nhiều thịt đỏ → Kết quả 300 kg CO₂e/tháng
+			Chọn ăn cân bằng → Kết quả 150 kg CO₂e/tháng
+			Chọn ăn chay → Kết quả 100 kg CO₂e/tháng
+Mua sắm và tiêu dùng (quần áo, đồ điện tử…)
+Phụ thuộc vào thói quen. Trung bình mỗi người 30–100 kg CO₂e/tháng
+Sử dụng công thức: Ít mua sắm → Kết quả 30 kg CO₂e/tháng
+			Mua sắm bình thường → Kết quả 65 kg CO₂e/tháng
+			Thường xuyên mua sắm → Kết quả 100 kg CO₂e/tháng
+Tổng hợp 4 Kết quả trên, ta được tổng tiêu dùng của 1 người trong tháng.
+Theo IPCC và Thỏa thuận Paris, để giữ nhiệt độ toàn cầu không tăng quá 1,5°C, mỗi người chỉ nên phát thải tối đa khoảng 2 tấn CO₂e/năm, tức ~167 kg CO₂e/tháng.
+Vậy ta sẽ so sánh với mức ~167 kg CO₂e/tháng.
+→ Nếu tổng phát thải > 167 kg CO₂e: Cảnh báo cần giảm phát thải. 
+→ Nếu tổng phát thải ≤ 167 kg CO₂e: Khen ngợi và khuyến khích duy trì.
+
+
+
+
+
+

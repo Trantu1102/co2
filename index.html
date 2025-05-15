@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tính vết Carbon của Bạn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+        padding: 36px 18px 28px 18px;
+        max-width: 420px;
+        width: 100%;
+        margin: 16px 0;
+        animation: fadeIn 0.8s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      h1 {
+        text-align: center;
+        color: #2d6a4f;
+        margin-bottom: 18px;
+        font-size: 2rem;
+        letter-spacing: 1px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 16px;
+        position: relative;
+      }
+      .form-label {
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        color: #264653;
+        margin-bottom: 5px;
+        font-size: 1.05rem;
+      }
+      .form-label .icon {
+        font-size: 1.3em;
+        margin-right: 8px;
+      }
+      input[type="number"],
+      select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 12px;
+        margin-top: 0;
+        border: 1px solid #b7c0c9;
+        border-radius: 7px;
+        font-size: 1rem;
+        background: #f7fafc;
+        transition: border 0.2s;
+      }
+      input[type="number"]:focus,
+      select:focus {
+        border: 1.5px solid #2d6a4f;
+        outline: none;
+        background: #e9f5ee;
+      }
+      button[type="submit"] {
+        width: 100%;
+        margin-top: 28px;
+        padding: 12px 0;
+        background: linear-gradient(90deg, #38b000 0%, #70e000 100%);
+        color: #fff;
+        font-size: 1.15rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(56, 176, 0, 0.08);
+        transition: background 0.2s, transform 0.1s;
+      }
+      button[type="submit"]:hover {
+        background: linear-gradient(90deg, #70e000 0%, #38b000 100%);
+        transform: translateY(-2px) scale(1.02);
+      }
+      .result {
+        margin-top: 32px;
+        font-size: 1.15rem;
+        text-align: center;
+        padding: 18px 12px;
+        border-radius: 10px;
+        min-height: 48px;
+        background: #f1faee;
+        box-shadow: 0 2px 8px rgba(44, 62, 80, 0.04);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s, transform 0.5s;
+      }
+      .result.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .result .warning {
+        color: #d90429;
+        font-weight: bold;
+      }
+      .result .good {
+        color: #38b000;
+        font-weight: bold;
+      }
+      @media (max-width: 600px) {
+        .container {
+          padding: 10vw 2vw 10vw 2vw;
+          max-width: 98vw;
+        }
+        h1 {
+          font-size: 1.2rem;
+        }
+        .form-label {
+          font-size: 1rem;
+        }
+        .result {
+          font-size: 1rem;
+          padding: 12px 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Tính vết Carbon của Bạn</h1>
+      <form id="carbonForm" autocomplete="off">
+        <div class="form-group">
+          <span class="form-label"
+            ><span class="icon">💡</span>Điện năng tiêu thụ (kWh/tháng):</span
+          >
+          <input
+            type="number"
+            id="electricity"
+            min="0"
+            required
+            placeholder="Nhập số kWh bạn đã sử dụng"
+          />
+        </div>
+        <div class="form-group">
+          <span class="form-label"
+            ><span class="icon">🚗</span>Giao thông đi lại:</span
+          >
+          <select id="vehicleType">
+            <option value="motor_gas">Xe máy xăng 🛵</option>
+            <option value="motor_electric">Xe máy điện 🛺</option>
+            <option value="car_gas">Ô tô xăng 🚙</option>
+            <option value="car_electric">Ô tô điện 🚘</option>
+          </select>
+          <input
+            type="number"
+            id="kmPerDay"
+            min="0"
+            required
+            placeholder="Số km/ngày"
+            style="margin-top: 8px"
+          />
+        </div>
+        <div class="form-group">
+          <span class="form-label"><span class="icon">🍽️</span>Ăn uống:</span>
+          <select id="diet">
+            <option value="red_meat">Ăn nhiều thịt đỏ 🥩</option>
+            <option value="balanced">Ăn cân bằng 🍗🥦</option>
+            <option value="vegetarian">Ăn chay 🥗</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <span class="form-label"
+            ><span class="icon">🛒</span>Mua sắm, tiêu dùng:</span
+          >
+          <select id="shopping">
+            <option value="low">Ít mua sắm 🧥</option>
+            <option value="normal">Mua sắm bình thường 👚</option>
+            <option value="high">Thường xuyên mua sắm 👗</option>
+          </select>
+        </div>
+        <button type="submit">Kết quả</button>
+      </form>
+      <div class="result" id="result"></div>
+    </div>
+    <script>
+      document.getElementById("carbonForm").onsubmit = function (e) {
+        e.preventDefault();
+        // Điện năng tiêu thụ
+        const kwh = Number(document.getElementById("electricity").value);
+        const carbonElectric = (kwh / 3) * 0.6592;
+
+        // Giao thông
+        const vehicle = document.getElementById("vehicleType").value;
+        const kmPerDay = Number(document.getElementById("kmPerDay").value);
+        let carbonTransport = 0;
+        if (vehicle === "motor_gas") {
+          carbonTransport = (kmPerDay / 100) * 2.5 * 30 * 2.31;
+        } else if (vehicle === "motor_electric") {
+          carbonTransport = kmPerDay * 30 * 0.0345 * 0.6592;
+        } else if (vehicle === "car_gas") {
+          carbonTransport = (kmPerDay / 100) * 8 * 30 * 2.31;
+        } else if (vehicle === "car_electric") {
+          carbonTransport = kmPerDay * 30 * 0.2 * 0.6592;
+        }
+
+        // Ăn uống
+        const diet = document.getElementById("diet").value;
+        let carbonDiet = 0;
+        if (diet === "red_meat") carbonDiet = 300;
+        else if (diet === "balanced") carbonDiet = 150;
+        else if (diet === "vegetarian") carbonDiet = 100;
+
+        // Mua sắm
+        const shopping = document.getElementById("shopping").value;
+        let carbonShopping = 0;
+        if (shopping === "low") carbonShopping = 30;
+        else if (shopping === "normal") carbonShopping = 65;
+        else if (shopping === "high") carbonShopping = 100;
+
+        // Tổng hợp
+        const total =
+          carbonElectric + carbonTransport + carbonDiet + carbonShopping;
+        let message = `Tổng phát thải CO₂e của bạn trong tháng: <b>${total.toFixed(
+          2
+        )} kg</b>.<br>`;
+        if (total > 167) {
+          message +=
+            '<span class="warning">Bạn cần giảm phát thải để bảo vệ môi trường!</span>';
+        } else {
+          message +=
+            '<span class="good">Tốt lắm! Hãy duy trì lối sống xanh!</span>';
+        }
+        const resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = message;
+        resultDiv.classList.add("show");
+      };
+    </script>
+  </body>
+</html>
