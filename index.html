@@ -184,29 +184,6 @@
         </div>
         <div class="form-group">
           <span class="form-label"
-            ><span class="icon">🚰</span>Nước sinh hoạt (m³/tháng):</span
-          >
-          <input
-            type="number"
-            id="water"
-            min="0"
-            required
-            placeholder="Nhập số m³ nước sử dụng"
-          />
-          <input
-            type="number"
-            id="waterPeople"
-            min="1"
-            required
-            placeholder="Số người trong hộ gia đình"
-            style="margin-top: 8px"
-          />
-          <div class="note">
-            <i>Hệ số phát thải nước sinh hoạt: 0,5 kg CO₂e/m³</i>
-          </div>
-        </div>
-        <div class="form-group">
-          <span class="form-label"
             ><span class="icon">🚗</span>Giao thông đi lại:</span
           >
           <select id="vehicleType">
@@ -233,8 +210,8 @@
           />
           <div class="note">
             <i
-              >Hệ số phát thải xăng: 2,31 kg CO₂e/lít<br />Hệ số phát thải điện:
-    0,6592 kg CO₂e/kWh</i
+              >Hệ số phát thải xăng: 2,31 kg CO₂e/lít<br />Hệ số phát thải điện
+              lưới: 0,6592 kg CO₂e/kWh</i
             >
           </div>
         </div>
@@ -247,8 +224,8 @@
           </select>
           <div class="note">
             <i
-              >Ăn nhiều thịt đỏ: 300 kg CO₂e/tháng<br />Ăn cân bằng: 150 kg
-              CO₂e/tháng<br />Ăn chay: 100 kg CO₂e/tháng</i
+              >Ăn nhiều thịt đỏ: 200 kg CO₂e/tháng<br />Ăn cân bằng: 100 kg
+              CO₂e/tháng<br />Ăn chay: 60 kg CO₂e/tháng</i
             >
           </div>
         </div>
@@ -263,9 +240,32 @@
           </select>
           <div class="note">
             <i
-              >Ít mua sắm: 30 kg CO₂e/tháng<br />Bình thường: 65 kg
-              CO₂e/tháng<br />Thường xuyên: 100 kg CO₂e/tháng</i
+              >Ít mua sắm: 15 kg CO₂e/tháng<br />Bình thường: 30 kg
+              CO₂e/tháng<br />Thường xuyên: 60 kg CO₂e/tháng</i
             >
+          </div>
+        </div>
+        <div class="form-group">
+          <span class="form-label"
+            ><span class="icon">🚰</span>Nước sinh hoạt (m³/tháng):</span
+          >
+          <input
+            type="number"
+            id="water"
+            min="0"
+            required
+            placeholder="Nhập số m³ nước sử dụng"
+          />
+          <input
+            type="number"
+            id="waterPeople"
+            min="1"
+            required
+            placeholder="Số người trong hộ gia đình"
+            style="margin-top: 8px"
+          />
+          <div class="note">
+            <i>Hệ số phát thải nước sinh hoạt: 0,5 kg CO₂e/m³</i>
           </div>
         </div>
         <div class="form-group">
@@ -326,16 +326,16 @@
         // Ăn uống
         const diet = document.getElementById("diet").value;
         let carbonDiet = 0;
-        if (diet === "red_meat") carbonDiet = 300;
-        else if (diet === "balanced") carbonDiet = 150;
-        else if (diet === "vegetarian") carbonDiet = 100;
+        if (diet === "red_meat") carbonDiet = 200;
+        else if (diet === "balanced") carbonDiet = 100;
+        else if (diet === "vegetarian") carbonDiet = 60;
 
         // Mua sắm
         const shopping = document.getElementById("shopping").value;
         let carbonShopping = 0;
-        if (shopping === "low") carbonShopping = 30;
-        else if (shopping === "normal") carbonShopping = 65;
-        else if (shopping === "high") carbonShopping = 100;
+        if (shopping === "low") carbonShopping = 15;
+        else if (shopping === "normal") carbonShopping = 30;
+        else if (shopping === "high") carbonShopping = 60;
 
         // Nước sinh hoạt
         const water = Number(document.getElementById("water").value);
