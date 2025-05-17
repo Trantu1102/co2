@@ -137,6 +137,18 @@
           padding: 12px 4px;
         }
       }
+      .note {
+        font-size: 0.82em;
+        color: #4a5568;
+        margin-top: 8px;
+        margin-bottom: 2px;
+        background: #f3f7fa;
+        border-left: 3px solid #70e000;
+        padding: 6px 10px;
+        border-radius: 5px;
+        font-style: italic;
+        font-weight: normal;
+      }
     </style>
   </head>
   <body>
@@ -153,7 +165,22 @@
             min="0"
             required
             placeholder="Nhập số kWh bạn đã sử dụng"
+            style="margin-top: 8px"
           />
+          <input
+            type="number"
+            id="electricityPeople"
+            min="1"
+            required
+            placeholder="Số người trong hộ gia đình"
+            style="margin-top: 8px"
+          />
+          <div class="note">
+            <i
+              >Hệ số phát thải điện lưới Việt Nam năm 2023: 0,6592 kg
+              CO₂e/kWh</i
+            >
+          </div>
         </div>
         <div class="form-group">
           <span class="form-label"
@@ -173,6 +200,20 @@
             placeholder="Số km/ngày"
             style="margin-top: 8px"
           />
+          <input
+            type="number"
+            id="vehiclePeople"
+            min="1"
+            required
+            placeholder="Số người trên xe"
+            style="margin-top: 8px"
+          />
+          <div class="note">
+            <i
+              >Hệ số phát thải xăng: 2,31 kg CO₂e/lít<br />Hệ số phát thải điện
+              lưới: 0,6592 kg CO₂e/kWh</i
+            >
+          </div>
         </div>
         <div class="form-group">
           <span class="form-label"><span class="icon">🍽️</span>Ăn uống:</span>
@@ -181,6 +222,12 @@
             <option value="balanced">Ăn cân bằng 🍗🥦</option>
             <option value="vegetarian">Ăn chay 🥗</option>
           </select>
+          <div class="note">
+            <i
+              >Ăn nhiều thịt đỏ: 300 kg CO₂e/tháng<br />Ăn cân bằng: 150 kg
+              CO₂e/tháng<br />Ăn chay: 100 kg CO₂e/tháng</i
+            >
+          </div>
         </div>
         <div class="form-group">
           <span class="form-label"
@@ -191,6 +238,58 @@
             <option value="normal">Mua sắm bình thường &#128087;</option>
             <option value="high">Thường xuyên mua sắm &#128090;</option>
           </select>
+          <div class="note">
+            <i
+              >Ít mua sắm: 30 kg CO₂e/tháng<br />Bình thường: 65 kg
+              CO₂e/tháng<br />Thường xuyên: 100 kg CO₂e/tháng</i
+            >
+          </div>
+        </div>
+        <div class="form-group">
+          <span class="form-label"
+            ><span class="icon">🚰</span>Nước sinh hoạt (m³/tháng):</span
+          >
+          <input
+            type="number"
+            id="water"
+            min="0"
+            required
+            placeholder="Nhập số m³ nước sử dụng"
+          />
+          <input
+            type="number"
+            id="waterPeople"
+            min="1"
+            required
+            placeholder="Số người trong hộ gia đình"
+            style="margin-top: 8px"
+          />
+          <div class="note">
+            <i>Hệ số phát thải nước sinh hoạt: 0,5 kg CO₂e/m³</i>
+          </div>
+        </div>
+        <div class="form-group">
+          <span class="form-label"
+            ><span class="icon">🗑️</span>Rác thải sinh hoạt (kg/tháng):</span
+          >
+          <input
+            type="number"
+            id="trash"
+            min="0"
+            required
+            placeholder="Nhập số kg rác thải"
+          />
+          <input
+            type="number"
+            id="trashPeople"
+            min="1"
+            required
+            placeholder="Số người trong hộ gia đình"
+            style="margin-top: 8px"
+          />
+          <div class="note">
+            <i>Hệ số phát thải rác sinh hoạt: 2 kg CO₂e/kg</i>
+          </div>
         </div>
         <button type="submit">Kết quả</button>
       </form>
@@ -201,20 +300,27 @@
         e.preventDefault();
         // Điện năng tiêu thụ
         const kwh = Number(document.getElementById("electricity").value);
-        const carbonElectric = (kwh / 3) * 0.6592;
+        const electricityPeople = Number(
+          document.getElementById("electricityPeople").value
+        );
+        const carbonElectric = (kwh / electricityPeople) * 0.6592;
 
         // Giao thông
         const vehicle = document.getElementById("vehicleType").value;
         const kmPerDay = Number(document.getElementById("kmPerDay").value);
+        const vehiclePeople = Number(
+          document.getElementById("vehiclePeople").value
+        );
         let carbonTransport = 0;
         if (vehicle === "motor_gas") {
-          carbonTransport = (kmPerDay / 100) * 2.5 * 30 * 2.31;
+          carbonTransport =
+            ((kmPerDay / 100) * 2.5 * 30 * 2.31) / vehiclePeople;
         } else if (vehicle === "motor_electric") {
-          carbonTransport = kmPerDay * 30 * 0.0345 * 0.6592;
+          carbonTransport = (kmPerDay * 30 * 0.0345 * 0.6592) / vehiclePeople;
         } else if (vehicle === "car_gas") {
-          carbonTransport = (kmPerDay / 100) * 8 * 30 * 2.31;
+          carbonTransport = ((kmPerDay / 100) * 8 * 30 * 2.31) / vehiclePeople;
         } else if (vehicle === "car_electric") {
-          carbonTransport = kmPerDay * 30 * 0.2 * 0.6592;
+          carbonTransport = (kmPerDay * 30 * 0.2 * 0.6592) / vehiclePeople;
         }
 
         // Ăn uống
@@ -231,9 +337,28 @@
         else if (shopping === "normal") carbonShopping = 65;
         else if (shopping === "high") carbonShopping = 100;
 
+        // Nước sinh hoạt
+        const water = Number(document.getElementById("water").value);
+        const waterPeople = Number(
+          document.getElementById("waterPeople").value
+        );
+        const carbonWater = (water * 0.5) / waterPeople;
+
+        // Rác thải sinh hoạt
+        const trash = Number(document.getElementById("trash").value);
+        const trashPeople = Number(
+          document.getElementById("trashPeople").value
+        );
+        const carbonTrash = (trash * 2) / trashPeople;
+
         // Tổng hợp
         const total =
-          carbonElectric + carbonTransport + carbonDiet + carbonShopping;
+          carbonElectric +
+          carbonTransport +
+          carbonDiet +
+          carbonShopping +
+          carbonWater +
+          carbonTrash;
         let message = `Tổng phát thải CO₂e của bạn trong tháng: <b>${total.toFixed(
           2
         )} kg</b>.<br>`;
