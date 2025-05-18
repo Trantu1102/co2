@@ -5,6 +5,60 @@
     <title>Tính vết Carbon của Bạn</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
+      .popup-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .popup-content {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 80%;
+        width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+        position: relative;
+        animation: popupFadeIn 0.3s ease-out;
+      }
+
+      @keyframes popupFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .close-btn {
+        display: block;
+        margin: 20px auto 0;
+        padding: 10px 25px;
+        background: linear-gradient(90deg, #38b000 0%, #70e000 100%);
+        color: white;
+        border: none;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+      }
+
+      .close-btn:hover {
+        background: linear-gradient(90deg, #70e000 0%, #38b000 100%);
+        transform: translateY(-2px);
+      }
       body {
         font-family: "Segoe UI", Arial, sans-serif;
         background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
@@ -18,8 +72,8 @@
         background: #fff;
         border-radius: 18px;
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-        padding: 36px 18px 28px 18px;
-        max-width: 420px;
+        padding: 28px 16px 24px 16px; /* Giảm padding */
+        max-width: 380px; /* Giảm từ 420px xuống 380px */
         width: 100%;
         margin: 16px 0;
         animation: fadeIn 0.8s;
@@ -45,7 +99,7 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        margin-top: 16px;
+        margin-top: 12px; /* Giảm từ 16px xuống 12px */
         position: relative;
       }
       .form-label {
@@ -64,11 +118,11 @@
       select {
         width: 100%;
         box-sizing: border-box;
-        padding: 10px 12px;
+        padding: 8px 10px; /* Giảm padding */
         margin-top: 0;
         border: 1px solid #b7c0c9;
         border-radius: 7px;
-        font-size: 1rem;
+        font-size: 0.95rem;
         background: #f7fafc;
         transition: border 0.2s;
       }
@@ -80,8 +134,8 @@
       }
       button[type="submit"] {
         width: 100%;
-        margin-top: 28px;
-        padding: 12px 0;
+        margin-top: 20px; /* Giảm margin */
+        padding: 10px 0; /* Giảm padding */
         background: linear-gradient(90deg, #38b000 0%, #70e000 100%);
         color: #fff;
         font-size: 1.15rem;
@@ -97,9 +151,9 @@
         transform: translateY(-2px) scale(1.02);
       }
       .result {
-        margin-top: 32px;
+        text-align: left; /* Thêm thuộc tính này */
+        margin-top: 15px;
         font-size: 1.15rem;
-        text-align: center;
         padding: 18px 12px;
         border-radius: 10px;
         min-height: 48px;
@@ -108,6 +162,7 @@
         opacity: 0;
         transform: translateY(20px);
         transition: opacity 0.5s, transform 0.5s;
+        white-space: pre-line; /* Thêm thuộc tính này để giữ nguyên xuống dòng */
       }
       .result.show {
         opacity: 1;
@@ -138,16 +193,58 @@
         }
       }
       .note {
-        font-size: 0.82em;
+        font-size: 0.75em; /* Giảm font size */
         color: #4a5568;
-        margin-top: 8px;
+        margin-top: 6px;
         margin-bottom: 2px;
         background: #f3f7fa;
         border-left: 3px solid #70e000;
-        padding: 6px 10px;
+        padding: 4px 8px; /* Giảm padding */
         border-radius: 5px;
         font-style: italic;
         font-weight: normal;
+      }
+
+      /* Style cho radio buttons */
+      .transport-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 15px;
+      }
+
+      .transport-radio {
+        display: none;
+      }
+
+      .transport-label {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px; /* Giảm padding */
+        border-radius: 8px;
+        background: #f7fafc;
+        border: 1px solid #e2e8f0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem; /* Giảm font size */
+        color: #4a5568;
+      }
+
+      .transport-label:hover {
+        background: #edf2f7;
+        transform: translateY(-1px);
+      }
+
+      .transport-radio:checked + .transport-label {
+        background: #38b000;
+        color: white;
+        border-color: #38b000;
+        box-shadow: 0 2px 4px rgba(56, 176, 0, 0.1);
+      }
+
+      .transport-icon {
+        margin-right: 8px;
+        font-size: 1.2em;
       }
     </style>
   </head>
@@ -157,84 +254,215 @@
       <form id="carbonForm" autocomplete="off">
         <div class="form-group">
           <span class="form-label"
-            ><span class="icon">💡</span>Điện năng tiêu thụ (kWh/tháng):</span
+            ><span class="icon">🏠</span>Tiêu thụ sinh hoạt:</span
           >
           <input
             type="number"
-            id="electricity"
-            min="0"
-            required
-            placeholder="Nhập số kWh bạn đã sử dụng"
-            style="margin-top: 8px"
-          />
-          <input
-            type="number"
-            id="electricityPeople"
+            id="householdPeople"
             min="1"
             required
-            placeholder="Số người trong hộ gia đình"
-            style="margin-top: 8px"
+            placeholder="Số người trong hộ"
+            style="margin-bottom: 8px; width: 100%"
           />
-          <div class="note">
-            <i
-              >Hệ số phát thải điện lưới Việt Nam năm 2023: 0,6592 kg
-              CO₂e/kWh</i
-            >
-          </div>
-        </div>
-        <div class="form-group">
-          <span class="form-label"
-            ><span class="icon">🚰</span>Nước sinh hoạt (m³/tháng):</span
-          >
-          <input
-            type="number"
-            id="water"
-            min="0"
-            required
-            placeholder="Nhập số m³ nước sử dụng"
-          />
-          <input
-            type="number"
-            id="waterPeople"
-            min="1"
-            required
-            placeholder="Số người trong hộ gia đình"
-            style="margin-top: 8px"
-          />
-          <div class="note">
-            <i>Hệ số phát thải nước sinh hoạt: 0,5 kg CO₂e/m³</i>
+          <div style="display: flex; gap: 10px">
+            <div style="flex: 1">
+              <label
+                style="
+                  font-weight: 500;
+                  color: #264653;
+                  margin-bottom: 5px;
+                  display: block;
+                "
+                >Điện:</label
+              >
+              <input
+                type="number"
+                id="electricity"
+                min="0"
+                required
+                placeholder="Số kWh/tháng"
+                style="width: 100%"
+              />
+              <div class="note" style="margin-top: 8px">
+                <i>Hệ số phát thải điện: 0,6592 kg CO₂e/kWh</i>
+              </div>
+            </div>
+            <div style="flex: 1">
+              <label
+                style="
+                  font-weight: 500;
+                  color: #264653;
+                  margin-bottom: 5px;
+                  display: block;
+                "
+                >Nước sinh hoạt:</label
+              >
+              <input
+                type="number"
+                id="water"
+                min="0"
+                required
+                placeholder="Số m³/tháng"
+                style="width: 100%"
+              />
+              <div class="note" style="margin-top: 8px">
+                <i>Hệ số phát thải nước: 0,5 kg CO₂e/m³</i>
+              </div>
+            </div>
+            <div style="flex: 1">
+              <label
+                style="
+                  font-weight: 500;
+                  color: #264653;
+                  margin-bottom: 5px;
+                  display: block;
+                "
+                >Rác thải:</label
+              >
+              <input
+                type="number"
+                id="trash"
+                min="0"
+                required
+                placeholder="Số kg/tháng"
+                style="width: 100%"
+              />
+              <div class="note" style="margin-top: 8px">
+                <i>Hệ số phát thải rác: 2 kg CO₂e/kg</i>
+              </div>
+            </div>
           </div>
         </div>
         <div class="form-group">
           <span class="form-label"
             ><span class="icon">🚗</span>Giao thông đi lại:</span
           >
-          <select id="vehicleType">
-            <option value="motor_gas">Xe máy xăng 🛵</option>
-            <option value="motor_electric">Xe máy điện &#128756;</option>
-            <option value="car_gas">Ô tô xăng &#128663;</option>
-            <option value="car_electric">Ô tô điện &#128665;</option>
-          </select>
-          <input
-            type="number"
-            id="kmPerDay"
-            min="0"
-            required
-            placeholder="Số km/ngày"
-            style="margin-top: 8px"
-          />
-          <input
-            type="number"
-            id="vehiclePeople"
-            min="1"
-            required
-            placeholder="Số người trên xe"
-            style="margin-top: 8px"
-          />
+
+          <!-- Thêm phần checkbox -->
+          <div class="transport-options">
+            <input
+              type="radio"
+              id="walking_cycling"
+              name="transportType"
+              value="walking_cycling"
+              class="transport-radio"
+            />
+            <label for="walking_cycling" class="transport-label">
+              <span class="transport-icon">🚲🚶</span>
+              Đi bộ/Đạp xe
+            </label>
+
+            <input
+              type="radio"
+              id="personal"
+              name="transportType"
+              value="personal"
+              class="transport-radio"
+              checked
+            />
+            <label for="personal" class="transport-label">
+              <span class="transport-icon">🚗</span>
+              Phương tiện cá nhân
+            </label>
+
+            <input
+              type="radio"
+              id="public"
+              name="transportType"
+              value="public"
+              class="transport-radio"
+            />
+            <label for="public" class="transport-label">
+              <span class="transport-icon">🚌</span>
+              Phương tiện công cộng
+            </label>
+
+            <input
+              type="radio"
+              id="both"
+              name="transportType"
+              value="both"
+              class="transport-radio"
+            />
+            <label for="both" class="transport-label">
+              <span class="transport-icon">🚗🚌</span>
+              Sử dụng cả hai loại
+            </label>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 8px">
+            <div style="flex: 1">
+              <label
+                style="
+                  font-weight: 500;
+                  color: #264653;
+                  margin-bottom: 5px;
+                  display: block;
+                "
+                >Phương tiện cá nhân:</label
+              >
+              <select id="vehicleType" style="width: 100%">
+                <option value="motor_gas">Xe máy xăng 🛵</option>
+                <option value="motor_electric">Xe máy điện &#128756;</option>
+                <option value="car_gas">Ô tô xăng &#128663;</option>
+                <option value="car_electric">Ô tô điện &#128665;</option>
+              </select>
+              <input
+                type="number"
+                id="kmPerDay"
+                min="0"
+                required
+                placeholder="Số km/ngày"
+                style="margin-top: 8px; width: 100%"
+              />
+              <input
+                type="number"
+                id="vehiclePeople"
+                min="1"
+                required
+                placeholder="Số người trên xe"
+                style="margin-top: 8px; width: 100%"
+              />
+            </div>
+            <div style="flex: 1">
+              <label
+                style="
+                  font-weight: 500;
+                  color: #264653;
+                  margin-bottom: 5px;
+                  display: block;
+                "
+                >Phương tiện công cộng:</label
+              >
+              <select id="publicTransport" style="width: 100%">
+                <option value="bus_gas">Xe buýt xăng 🚌</option>
+                <option value="bus_electric">Xe buýt điện 🚎</option>
+              </select>
+              <input
+                type="number"
+                id="publicKmPerDay"
+                min="0"
+                required
+                placeholder="Số km/ngày"
+                style="margin-top: 8px; width: 100%"
+              />
+              <div
+                style="
+                  height: 42px;
+                  margin-top: 8px;
+                  font-size: 0.9em;
+                  color: #666;
+                "
+              >
+                (Số người trung bình: 45 người/xe)
+              </div>
+            </div>
+          </div>
           <div class="note">
             <i
-              >Hệ số phát thải xăng: 2,31 kg CO₂e/lít<br />Hệ số phát thải điện
-              lưới: 0,6592 kg CO₂e/kWh</i
+              >Hệ số phát thải xăng: 2,31 kg CO₂e/lít<br />
+              Hệ số phát thải điện lưới: 0,6592 kg CO₂e/kWh<br />
+              Đi bộ/Đạp xe: 0 kg CO₂e</i
             >
           </div>
         </div>
@@ -268,111 +496,287 @@
             >
           </div>
         </div>
-        <div class="form-group">
-          <span class="form-label"
-            ><span class="icon">🗑️</span>Rác thải sinh hoạt (kg/tháng):</span
-          >
-          <input
-            type="number"
-            id="trash"
-            min="0"
-            required
-            placeholder="Nhập số kg rác thải"
-          />
-          <input
-            type="number"
-            id="trashPeople"
-            min="1"
-            required
-            placeholder="Số người trong hộ gia đình"
-            style="margin-top: 8px"
-          />
-          <div class="note">
-            <i>Hệ số phát thải rác sinh hoạt: 2 kg CO₂e/kg</i>
-          </div>
-        </div>
         <button type="submit">Kết quả</button>
       </form>
-      <div class="result" id="result"></div>
+
+      <div class="popup-wrapper" id="popupWrapper">
+        <div class="popup-content">
+          <div class="result" id="result"></div>
+          <button class="close-btn">Đóng</button>
+        </div>
+      </div>
     </div>
     <script>
-      document.getElementById("carbonForm").onsubmit = function (e) {
+      const GEMINI_API_KEY = "AIzaSyCQtBQuw8Ld4IYFztvsfie7f7amR5i9z74"; // Thay bằng API key của bạn
+
+      async function getGeminiAdvice(total, details) {
+        try {
+          const prompt = `Tôi vừa tính toán tổng phát thải CO₂e của mình trong tháng là ${total.toFixed(
+            2
+          )} kg. Chi tiết: ${details}.
+      Hãy phân tích kết quả này và đưa ra lời khuyên cụ thể để tôi giảm phát thải, ưu tiên các giải pháp thực tế cho người Việt Nam.
+      Ngắn gọn và dễ hiểu, không quá 150 từ.
+      Trả lời theo format sau và không thêm các nội dung thừa của gemini:
+      - Đánh giá chung: [đánh giá ngắn gọn về mức phát thải] so với 167 kg CO₂e/tháng (mức tiêu chuẩn).
+
+      - Điện (xx kg): [lời khuyên]
+
+      - Giao thông (xx kg): [lời khuyên]
+
+      - Ăn uống (xx kg): [lời khuyên]
+
+      - Mua sắm (xx kg): [lời khuyên]
+
+      - Nước (xx kg): [lời khuyên]
+
+      - Rác (xx kg): [lời khuyên]`;
+          const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=" +
+              GEMINI_API_KEY,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+              }),
+            }
+          );
+          const data = await response.json();
+          console.log("Gemini response:", data); // Log để debug
+          if (data.error) {
+            return `Lỗi từ Gemini: ${data.error.message}`;
+          }
+          return (
+            data.candidates?.[0]?.content?.parts?.[0]?.text ||
+            "Không nhận được phản hồi từ Gemini."
+          );
+        } catch (error) {
+          console.error("Error:", error);
+          return `Lỗi khi gọi API: ${error.message}`;
+        }
+      }
+
+      document.getElementById("carbonForm").onsubmit = async function (e) {
         e.preventDefault();
-        // Điện năng tiêu thụ
-        const kwh = Number(document.getElementById("electricity").value);
-        const electricityPeople = Number(
-          document.getElementById("electricityPeople").value
-        );
-        const carbonElectric = (kwh / electricityPeople) * 0.6592;
+        try {
+          const resultDiv = document.getElementById("result");
+          const popupWrapper = document.getElementById("popupWrapper");
 
-        // Giao thông
-        const vehicle = document.getElementById("vehicleType").value;
-        const kmPerDay = Number(document.getElementById("kmPerDay").value);
-        const vehiclePeople = Number(
-          document.getElementById("vehiclePeople").value
-        );
-        let carbonTransport = 0;
-        if (vehicle === "motor_gas") {
-          carbonTransport =
-            ((kmPerDay / 100) * 2.5 * 30 * 2.31) / vehiclePeople;
-        } else if (vehicle === "motor_electric") {
-          carbonTransport = (kmPerDay * 30 * 0.0345 * 0.6592) / vehiclePeople;
-        } else if (vehicle === "car_gas") {
-          carbonTransport = ((kmPerDay / 100) * 8 * 30 * 2.31) / vehiclePeople;
-        } else if (vehicle === "car_electric") {
-          carbonTransport = (kmPerDay * 30 * 0.2 * 0.6592) / vehiclePeople;
-        }
+          // Thêm validation
+          if (!document.querySelector('input[name="transportType"]:checked')) {
+            alert("Vui lòng chọn phương tiện di chuyển");
+            return;
+          }
 
-        // Ăn uống
-        const diet = document.getElementById("diet").value;
-        let carbonDiet = 0;
-        if (diet === "red_meat") carbonDiet = 200;
-        else if (diet === "balanced") carbonDiet = 100;
-        else if (diet === "vegetarian") carbonDiet = 60;
+          // Lấy các giá trị input và tính toán
+          const householdPeople = Number(
+            document.getElementById("householdPeople").value
+          );
+          const kwh = Number(document.getElementById("electricity").value);
+          const water = Number(document.getElementById("water").value);
+          const trash = Number(document.getElementById("trash").value);
 
-        // Mua sắm
-        const shopping = document.getElementById("shopping").value;
-        let carbonShopping = 0;
-        if (shopping === "low") carbonShopping = 15;
-        else if (shopping === "normal") carbonShopping = 30;
-        else if (shopping === "high") carbonShopping = 60;
+          // Kiểm tra giá trị hợp lệ
+          if (!householdPeople || !kwh || !water || !trash) {
+            alert("Vui lòng điền đầy đủ thông tin tiêu thụ sinh hoạt");
+            return;
+          }
 
-        // Nước sinh hoạt
-        const water = Number(document.getElementById("water").value);
-        const waterPeople = Number(
-          document.getElementById("waterPeople").value
-        );
-        const carbonWater = (water * 0.5) / waterPeople;
+          // Tính toán carbon điện
+          const carbonElectric = (kwh / householdPeople) * 0.6592;
 
-        // Rác thải sinh hoạt
-        const trash = Number(document.getElementById("trash").value);
-        const trashPeople = Number(
-          document.getElementById("trashPeople").value
-        );
-        const carbonTrash = (trash * 2) / trashPeople;
+          // Tính toán carbon giao thông
+          let carbonTransport = 0;
+          let carbonPublicTransport = 0;
+          const transportType = document.querySelector(
+            'input[name="transportType"]:checked'
+          ).value;
 
-        // Tổng hợp
-        const total =
-          carbonElectric +
-          carbonTransport +
-          carbonDiet +
-          carbonShopping +
-          carbonWater +
-          carbonTrash;
-        let message = `Tổng phát thải CO₂e của bạn trong tháng: <b>${total.toFixed(
-          2
-        )} kg</b>.<br>`;
-        if (total > 167) {
+          if (transportType === "walking_cycling") {
+            carbonTransport = 0;
+          } else {
+            if (transportType === "personal" || transportType === "both") {
+              const vehicle = document.getElementById("vehicleType").value;
+              const kmPerDay = Number(
+                document.getElementById("kmPerDay").value
+              );
+              const vehiclePeople = Number(
+                document.getElementById("vehiclePeople").value
+              );
+
+              if (!kmPerDay || !vehiclePeople) {
+                alert("Vui lòng điền đầy đủ thông tin phương tiện cá nhân");
+                return;
+              }
+
+              // Tính toán dựa trên loại phương tiện
+              switch (vehicle) {
+                case "motor_gas":
+                  carbonTransport =
+                    ((kmPerDay / 100) * 2.5 * 30 * 2.31) / vehiclePeople;
+                  break;
+                case "motor_electric":
+                  carbonTransport =
+                    (kmPerDay * 30 * 0.0345 * 0.6592) / vehiclePeople;
+                  break;
+                case "car_gas":
+                  carbonTransport =
+                    ((kmPerDay / 100) * 8 * 30 * 2.31) / vehiclePeople;
+                  break;
+                case "car_electric":
+                  carbonTransport =
+                    (kmPerDay * 30 * 0.2 * 0.6592) / vehiclePeople;
+                  break;
+              }
+            }
+
+            if (transportType === "public" || transportType === "both") {
+              const publicTransport =
+                document.getElementById("publicTransport").value;
+              const publicKmPerDay = Number(
+                document.getElementById("publicKmPerDay").value
+              );
+
+              if (!publicKmPerDay) {
+                alert("Vui lòng điền đầy đủ thông tin phương tiện công cộng");
+                return;
+              }
+
+              const publicPeople = 45;
+              if (publicTransport === "bus_gas") {
+                carbonPublicTransport =
+                  ((publicKmPerDay / 100) * 25 * 30 * 2.31) / publicPeople;
+              } else if (publicTransport === "bus_electric") {
+                carbonPublicTransport =
+                  (publicKmPerDay * 30 * 1.0 * 0.6592) / publicPeople;
+              }
+            }
+          }
+
+          // Tính toán các giá trị khác
+          const carbonWater = (water * 0.5) / householdPeople;
+          const carbonTrash = (trash * 2) / householdPeople;
+
+          const diet = document.getElementById("diet").value;
+          const carbonDiet =
+            diet === "red_meat" ? 200 : diet === "balanced" ? 100 : 60;
+
+          const shopping = document.getElementById("shopping").value;
+          const carbonShopping =
+            shopping === "low" ? 15 : shopping === "normal" ? 30 : 60;
+
+          // Tính tổng
+          const total =
+            carbonElectric +
+            carbonTransport +
+            carbonPublicTransport +
+            carbonDiet +
+            carbonShopping +
+            carbonWater +
+            carbonTrash;
+
+          let message = `Tổng phát thải CO₂e của bạn trong tháng: <b>${total.toFixed(
+            2
+          )} kg</b>.<br>`;
           message +=
-            '<span class="warning">Bạn cần giảm phát thải để bảo vệ môi trường!</span>';
-        } else {
-          message +=
-            '<span class="good">Tốt lắm! Hãy duy trì lối sống xanh!</span>';
+            total > 167
+              ? '<span class="warning">Bạn cần giảm phát thải để bảo vệ môi trường!</span>'
+              : '<span class="good">Tốt lắm! Hãy duy trì lối sống xanh!</span>';
+
+          // Ensure popup is shown before loading advice
+          resultDiv.innerHTML =
+            message + "<br><i>Đang phân tích chi tiết...</i>";
+          popupWrapper.style.display = "flex";
+          resultDiv.classList.add("show");
+
+          const details =
+            `Điện: ${carbonElectric.toFixed(2)} kg, Giao thông: ${(
+              carbonTransport + carbonPublicTransport
+            ).toFixed(2)} kg, ` +
+            `Ăn uống: ${carbonDiet} kg, Mua sắm: ${carbonShopping} kg, ` +
+            `Nước: ${carbonWater.toFixed(2)} kg, Rác: ${carbonTrash.toFixed(
+              2
+            )} kg`;
+
+          const advice = await getGeminiAdvice(total, details);
+
+          // Update final result
+          resultDiv.innerHTML = `
+            <div style="text-align: center; margin-bottom: 5px">${message}</div>
+            <br>
+            ${advice.replace(/\n/g, "<br>")}
+          `;
+
+          // Xử lý đóng popup
+          const closeBtn = document.querySelector(".close-btn");
+          closeBtn.onclick = () => (popupWrapper.style.display = "none");
+          popupWrapper.onclick = (e) => {
+            if (e.target === popupWrapper) popupWrapper.style.display = "none";
+          };
+        } catch (error) {
+          console.error("Error in form submission:", error);
+          alert("Có lỗi xảy ra: " + error.message);
         }
-        const resultDiv = document.getElementById("result");
-        resultDiv.innerHTML = message;
-        resultDiv.classList.add("show");
       };
+
+      // Thêm function xử lý enable/disable fields
+      function handleTransportTypeChange() {
+        const transportType = document.querySelector(
+          'input[name="transportType"]:checked'
+        ).value;
+        const personalFields = document.querySelectorAll(
+          "#vehicleType, #kmPerDay, #vehiclePeople"
+        );
+        const publicFields = document.querySelectorAll(
+          "#publicTransport, #publicKmPerDay"
+        );
+
+        // Xử lý các trường phương tiện cá nhân
+        personalFields.forEach((field) => {
+          if (
+            transportType === "public" ||
+            transportType === "walking_cycling"
+          ) {
+            field.disabled = true;
+            field.style.opacity = "0.5";
+            if (field.tagName === "INPUT") field.value = "";
+          } else {
+            field.disabled = false;
+            field.style.opacity = "1";
+          }
+        });
+
+        // Xử lý các trường phương tiện công cộng
+        publicFields.forEach((field) => {
+          if (
+            transportType === "personal" ||
+            transportType === "walking_cycling"
+          ) {
+            field.disabled = true;
+            field.style.opacity = "0.5";
+            if (field.tagName === "INPUT") field.value = "";
+          } else {
+            field.disabled = false;
+            field.style.opacity = "1";
+          }
+        });
+      }
+
+      // Thêm event listeners
+      document
+        .querySelectorAll('input[name="transportType"]')
+        .forEach((radio) => {
+          radio.addEventListener("change", handleTransportTypeChange);
+        });
+
+      // Gọi function lần đầu để set trạng thái mặc định
+      handleTransportTypeChange();
+
+      console.log("Submit button clicked");
+      console.log("Popup elements:", {
+        resultDiv: document.getElementById("result"),
+        popupWrapper: document.getElementById("popupWrapper"),
+      });
     </script>
   </body>
 </html>
