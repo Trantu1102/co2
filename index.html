@@ -342,6 +342,18 @@
           <div class="transport-options">
             <input
               type="radio"
+              id="walking"
+              name="transportType"
+              value="walking"
+              class="transport-radio"
+            />
+            <label for="walking" class="transport-label">
+              <span class="transport-icon">🚶</span>
+              Đi bộ
+            </label>
+
+            <input
+              type="radio"
               id="personal"
               name="transportType"
               value="personal"
@@ -581,8 +593,8 @@
             'input[name="transportType"]:checked'
           ).value;
 
-          if (transportType === "walking_cycling") {
-            carbonTransport = 0;
+          if (transportType === "walking") {
+            carbonTransport = 0; // Đi bộ không phát thải
           } else {
             if (transportType === "personal" || transportType === "both") {
               const vehicle = document.getElementById("vehicleType").value;
@@ -722,10 +734,7 @@
 
         // Xử lý các trường phương tiện cá nhân
         personalFields.forEach((field) => {
-          if (
-            transportType === "public" ||
-            transportType === "walking_cycling"
-          ) {
+          if (transportType === "public" || transportType === "walking") {
             field.disabled = true;
             field.style.opacity = "0.5";
             if (field.tagName === "INPUT") field.value = "";
@@ -737,10 +746,7 @@
 
         // Xử lý các trường phương tiện công cộng
         publicFields.forEach((field) => {
-          if (
-            transportType === "personal" ||
-            transportType === "walking_cycling"
-          ) {
+          if (transportType === "personal" || transportType === "walking") {
             field.disabled = true;
             field.style.opacity = "0.5";
             if (field.tagName === "INPUT") field.value = "";
