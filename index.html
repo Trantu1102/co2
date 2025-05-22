@@ -462,7 +462,7 @@
           <div class="note">
             <i
               >Hệ số phát thải xăng: 2,31 kg CO₂e/lít<br />
-              Hệ số phát thải điện: 0,6592 kg CO₂e/kWh<br />
+              Hệ số phát thải điện lưới: 0,6592 kg CO₂e/kWh<br />
               Đi bộ/Đạp xe: 0 kg CO₂e</i
             >
           </div>
@@ -630,10 +630,16 @@
           let message = `Tổng phát thải CO₂e của bạn trong tháng: <b>${total.toFixed(
             2
           )} kg</b>.<br>`;
-          message +=
-            total > 168
-              ? '<span class="warning">Bạn cần giảm phát thải để bảo vệ môi trường!</span>'
-              : '<span class="good">Tốt lắm! Hãy duy trì lối sống xanh!</span>';
+          message += `Mức phát thải tiêu chuẩn: <b>167 kg</b>.<br>`;
+          if (total > 167) {
+            const excess = total - 167;
+            message += `<span class="warning">Bạn đã vượt ${excess.toFixed(
+              2
+            )} kg so với mức tiêu chuẩn! Cần giảm phát thải.</span>`;
+          } else {
+            message +=
+              '<span class="good">Bạn đang ở dưới mức phát thải tiêu chuẩn. Tốt lắm!</span>';
+          }
 
           // Ensure popup is shown before loading advice
           resultDiv.innerHTML = message;
