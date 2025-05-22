@@ -508,55 +508,6 @@
       </div>
     </div>
     <script>
-      const GEMINI_API_KEY = "AIzaSyCQtBQuw8Ld4IYFztvsfie7f7amR5i9z74"; // Thay bằng API key của bạn
-
-      async function getGeminiAdvice(total, details) {
-        try {
-          const prompt = `Tôi vừa tính toán tổng phát thải CO₂e của mình trong tháng là ${total.toFixed(
-            2
-          )} kg. Chi tiết: ${details}.
-      Hãy phân tích kết quả này và đưa ra lời khuyên cụ thể để tôi giảm phát thải, ưu tiên các giải pháp thực tế cho người Việt Nam.
-      Ngắn gọn và dễ hiểu, không quá 150 từ.
-      Trả lời theo format sau và không thêm các nội dung thừa của gemini:
-      - Đánh giá chung: [đánh giá ngắn gọn về mức phát thải] so với 167 kg CO₂e/tháng (mức tiêu chuẩn).
-
-      - Điện (xx kg): [lời khuyên]
-
-      - Giao thông (xx kg): [lời khuyên]
-
-      - Ăn uống (xx kg): [lời khuyên]
-
-      - Mua sắm (xx kg): [lời khuyên]
-
-      - Nước (xx kg): [lời khuyên]
-
-      - Rác (xx kg): [lời khuyên]`;
-          const response = await fetch(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=" +
-              GEMINI_API_KEY,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-              }),
-            }
-          );
-          const data = await response.json();
-          console.log("Gemini response:", data); // Log để debug
-          if (data.error) {
-            return `Lỗi từ Gemini: ${data.error.message}`;
-          }
-          return (
-            data.candidates?.[0]?.content?.parts?.[0]?.text ||
-            "Không nhận được phản hồi từ Gemini."
-          );
-        } catch (error) {
-          console.error("Error:", error);
-          return `Lỗi khi gọi API: ${error.message}`;
-        }
-      }
-
       document.getElementById("carbonForm").onsubmit = async function (e) {
         e.preventDefault();
         try {
@@ -680,33 +631,14 @@
             2
           )} kg</b>.<br>`;
           message +=
-            total > 167
+            total > 168
               ? '<span class="warning">Bạn cần giảm phát thải để bảo vệ môi trường!</span>'
               : '<span class="good">Tốt lắm! Hãy duy trì lối sống xanh!</span>';
 
           // Ensure popup is shown before loading advice
-          resultDiv.innerHTML =
-            message + "<br><i>Đang phân tích chi tiết...</i>";
+          resultDiv.innerHTML = message;
           popupWrapper.style.display = "flex";
           resultDiv.classList.add("show");
-
-          const details =
-            `Điện: ${carbonElectric.toFixed(2)} kg, Giao thông: ${(
-              carbonTransport + carbonPublicTransport
-            ).toFixed(2)} kg, ` +
-            `Ăn uống: ${carbonDiet} kg, Mua sắm: ${carbonShopping} kg, ` +
-            `Nước: ${carbonWater.toFixed(2)} kg, Rác: ${carbonTrash.toFixed(
-              2
-            )} kg`;
-
-          const advice = await getGeminiAdvice(total, details);
-
-          // Update final result
-          resultDiv.innerHTML = `
-            <div style="text-align: center; margin-bottom: 5px">${message}</div>
-            <br>
-            ${advice.replace(/\n/g, "<br>")}
-          `;
 
           // Xử lý đóng popup
           const closeBtn = document.querySelector(".close-btn");
